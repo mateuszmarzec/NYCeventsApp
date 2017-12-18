@@ -1,0 +1,35 @@
+{% load static %}
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <a class="navbar-brand" href="#" id="nav-logo"><i id="popoverOption" data-content="Go Home!" rel="popover" data-placement="bottom" class="fa fa-home" aria-hidden="true"></i></a>
+
+  <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+        <ul class="navbar-nav ml-auto mt-2 mt-lg-0" id="nav-icons">
+      {% if user.is_authenticated %}
+      <li class="nav-item">
+        <div class="dropdown show">
+            <a class="nav-link" data-toggle="dropdown" href="#"><i id="popoverOption" class="fa fa-user-circle-o" aria-hidden="true" data-content="Your account settings" rel="popover" data-placement="bottom">Account</i></a>
+              <div class="dropdown-menu" id="nav-bar-drop-down">
+                <a class="dropdown-item" href="{% url 'RateApp:user_info' %}"><i class="fa fa-user" aria-hidden="true" data-content="Your account settings" rel="popover" data-placement="bottom"> Account</i></a>
+                <a class="dropdown-item" href="{% url 'RateApp:password_change' %}"><i class="fa fa-unlock-alt" aria-hidden="true" data-content="Your account settings" rel="popover" data-placement="bottom"> Change Password</i></a>
+                  <!-- Tutaj dalsze opcje -->
+              </div>
+            </div>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#"><i id="popoverOption" class="fa fa-sign-out fa" aria-hidden="true" data-content="Are You sure? :(" rel="popover" data-placement="bottom">Sing Out</i></a>
+      </li>
+      {% else %}
+      <li class="nav-item active">
+        <a class="nav-link" href="#"><i id="popoverOption" data-content="To use this app You have to sign in!" rel="popover" data-placement="bottom" class="fa fa-sign-in" aria-hidden="true" data-toggle="modal" data-target="#sign-in-modal"> Sign In</i></a>
+      </li>
+      <li class="nav-item active">
+        <a class="nav-link" href="#"><i id="popoverOption" data-content="If You don't have an account, do so!" rel="popover" data-placement="bottom" class="fa fa-user-plus" aria-hidden="true" data-toggle="modal" data-target="#sign-up-modal"> Sign Up</i></a>
+      </li>
+      {% endif %}
+    </ul>
+  </div>
+</nav>

@@ -1,0 +1,107 @@
+/* Input style */
+#sizing-addon1 {
+    background-color: #343a40 !important;
+    opacity: 1;
+}
+
+#sizing-addon1 i{
+    color: #868e96 !important;
+}
+
+/* Forms style */
+#reg-form{
+    width: 500px;
+    margin-top: 20px;
+}
+div button:not(.close){
+    width:100% ;
+    border-color:#343a40 !important;
+    background-color:#343a40 !important;
+    color:#868e96;
+}
+
+/* Links style */
+a{
+    color: #868e96;
+}
+a:hover{
+    color: #868e96;
+}
+/* Form title style */
+#form-title{
+    background-color: transparent;
+    margin: 0px;
+    padding:0px;
+    text-align: center;
+    color: #343a40 !important;
+}
+#form-title .container h1{
+    font-size: 30px;
+}
+
+/* Site header style */
+@media (max-width: 767px) {
+    #site-title .container h1 p{
+        font-size: 30px;
+    }
+    #site-title .container > p{
+        font-size: 15px;
+    }
+    #site-title {
+        padding: 20px;
+    }
+}
+@media (min-width: 768px) {
+    #site-title .container h1 p{
+        font-size: 40px;
+    }
+    #site-title .container > p{
+        font-size: 20px;
+    }
+    #site-title {
+        padding: 30px;
+    }
+
+}
+.jumbotron-fluid .container{
+    text-align: center;
+}
+
+/* Loader style */
+.loader {
+    display: none;
+    position: absolute;
+    z-index: 4;
+    top: 50%;
+    bottom: 50%;
+    left: 50%;
+    right: 50%;
+    margin-left : -60px;
+    margin-top : -60px;
+    border: 16px solid #e9ecef;
+    border-radius: 50%;
+    border-top: 16px solid #343a40;
+    width: 120px;
+    height: 120px;
+    -webkit-animation: spin 2s linear infinite;
+    animation: spin 2s linear infinite;
+}
+
+@-webkit-keyframes spin {
+    0% { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+#reg-submit{
+    cursor: pointer !important;
+}
+
+
+
+
+
+
