@@ -3,56 +3,66 @@
 {% block title %} Home {% endblock %}
 
 {% block content %}
-<div id="map"></div>
+    {% if response %}
+        <div id="map"></div>
+    {% endif %}
+
     <div id="reg-form" class="container">
         <div id="form-title" class="jumbotron jumbotron">
                               <div class="container">
                                   <h1 class="lead">Welcome to NYC TaxVent!</h1>
                               </div>
         </div>
-    </div>
-    <div class="container" style="width:50%; padding-top: 50px">
+
+    <div class="form-group">
+        <div id="form-title" class="jumbotron jumbotron">
+            <div class="container">
+                <h2 class="lead">Select event</h2>
+            </div>
+        </div>
         <form method="POST" class="post-form"> {% csrf_token %}
             <div class="form-row">
                     <div class="col-lg-12">
                         <div class="input-group">
-                          <input name="start_date" required type="datetime" class="form-control" id="id_teacher">
-                          <input name="end_date"  required type="datetime" class="form-control"id="id_teacher">
+                            {{ form.choose_event }}
                             <span class="input-group-btn">
                             <button class="btn btn-secondary" type="submit">Search!</button>
                           </span>
                         </div>
                       </div>
             </div>
+            <div class="form-check">
+                    <label class="form-check-label">
+                      <input type="checkbox" name="switch_direction" class="form-check-input">
+                      Switch direction
+                    </label>
+            </div>
+
         </form>
+    </div>
 
-    <table class="table">
-        <thead class="thead">
-            <th>Y</th><th>X</th><th>Trips</th>
-        </thead>
-        <tbody>
-
-        </tbody>
-    </table>
     </div>
     <script>
 
-    // This example requires the Visualization library. Include the libraries=visualization
-// parameter when you first load the API. For example:
-// <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=visualization">
-
-var map, heatmap;
-
+var map, heatmap, marker;
+var myLatLng = {lat: {{ latitude }}, lng: {{ longitude }}};
 function initMap() {
   map = new google.maps.Map(document.getElementById('map'), {
-    zoom: 13,
-    center: {lat: 40.7127753, lng: -74.0059728},
+    zoom: 12,
+    center: {lat: {{ latitude }}, lng: {{ longitude }}},
     mapTypeId: 'satellite'
   });
 
   heatmap = new google.maps.visualization.HeatmapLayer({
     data: getPoints(),
     map: map,
+  });
+
+  marker = new google.maps.Marker({
+    position: myLatLng,
+    map: map,
+    title: 'Event location',
+    animation: google.maps.Animation.DROP,
   });
 }
 
@@ -92,7 +102,7 @@ function changeOpacity() {
 function getPoints() {
     var list = []
     {% for row in response %}
-        list.push(new google.maps.LatLng({{ row.pickup_latitude }}, {{ row.pickup_longitude }}));
+        list.push(new google.maps.LatLng({{ row.0 }}, {{ row.1 }}));
     {% endfor %}
     return list;
 }
@@ -101,6 +111,17 @@ function getPoints() {
 
     <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDqZXQrRSkucJiWKx7eadH7qfv29uUFXno&libraries=visualization&callback=initMap">
+    </script>
+
+    <script>
+    $( document ).ready(function() {
+        if ( $('#map').length ){
+            $("#reg-form").css("margin-top","20px");
+        }
+        else{
+            $("#reg-form").css("margin-top","20vh");
+        }
+    });
     </script>
 
 {% endblock %}

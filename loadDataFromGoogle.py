@@ -2,7 +2,7 @@ from google.cloud import bigquery
 from oauth2client.client import GoogleCredentials
 from oauth2client.service_account import ServiceAccountCredentials
 
-def query_shakespeare(request, start_date, end_date):
+def query_shakespeare(request, start_date, end_date, coordinates):
     client = bigquery.Client.from_service_account_json('My Project-212bfbc62b78.json')
     print(start_date)
     query_params = [
@@ -15,7 +15,17 @@ def query_shakespeare(request, start_date, end_date):
             'end_date',
             'STRING',
             end_date
-        )
+        ),
+        bigquery.ScalarQueryParameter(
+            'lat',
+            'FLOAT',
+            coordinates['latitude']
+        ),
+        bigquery.ScalarQueryParameter(
+            'lng',
+            'FLOAT',
+            coordinates['longitude']
+        ),
     ]
     job_config = bigquery.QueryJobConfig()
     job_config.query_parameters = query_params
