@@ -4,33 +4,62 @@
 
 {% block content %}
     {% if response %}
-        <div id="map"></div>
+        {% if type == 'GOOGLE_MAP' %}
+            <div id="map"></div>
+        {% endif %}
+        {% if type == 'HOUR_BY_HOUR_PLOT' %}
+            <div id="container"></div>
+        {% endif %}
     {% endif %}
 
     <div id="reg-form" class="container">
         <div id="form-title" class="jumbotron jumbotron">
                               <div class="container">
-                                  <h1 class="lead">Welcome to NYC TaxVent!</h1>
+                                  <h1 class="lead">Welcome to NYC <b>TaxVent!</b></h1>
                               </div>
         </div>
-
+  <form method="POST" class="post-form"> {% csrf_token %}
     <div class="form-group">
         <div id="form-title" class="jumbotron jumbotron">
             <div class="container">
                 <h2 class="lead">Select event</h2>
             </div>
         </div>
-        <form method="POST" class="post-form"> {% csrf_token %}
             <div class="form-row">
                     <div class="col-lg-12">
                         <div class="input-group">
                             {{ form.choose_event }}
-                            <span class="input-group-btn">
+                        </div>
+                      </div>
+            </div>
+    </div>
+      <div class="form-group">
+        <div id="form-title" class="jumbotron jumbotron">
+            <div class="container">
+                <h2 class="lead">Select type</h2>
+            </div>
+        </div>
+        <form method="POST" class="post-form"> {% csrf_token %}
+            <div class="form-row">
+                    <div class="col-lg-12">
+                        <div class="input-group">
+                            {{ form.choose_output }}
+                        </div>
+                      </div>
+            </div>
+     </div>
+      <div class="form-group">
+        <form method="POST" class="post-form"> {% csrf_token %}
+            <div class="form-row">
+                    <div class="col-lg-12">
+                        <div class="input-group">
+                            <span class="input-group">
                             <button class="btn btn-secondary" type="submit">Search!</button>
                           </span>
                         </div>
                       </div>
             </div>
+
             <div class="form-check">
                     <label class="form-check-label">
                       <input type="checkbox" name="switch_direction" class="form-check-input">
@@ -38,10 +67,12 @@
                     </label>
             </div>
 
-        </form>
-    </div>
 
     </div>
+  </form>
+    </div>
+
+{% if type == 'GOOGLE_MAP' %}
     <script>
 
 var map, heatmap, marker;
@@ -108,14 +139,14 @@ function getPoints() {
 }
 
     </script>
-
+{% endif %}
     <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDqZXQrRSkucJiWKx7eadH7qfv29uUFXno&libraries=visualization&callback=initMap">
     </script>
 
     <script>
     $( document ).ready(function() {
-        if ( $('#map').length ){
+        if ( $('#map').length || $('#container').length){
             $("#reg-form").css("margin-top","20px");
         }
         else{
@@ -123,5 +154,69 @@ function getPoints() {
         }
     });
     </script>
+{% if type == 'HOUR_BY_HOUR_PLOT' %}
+    <script>
+    Highcharts.chart('container', {
+    chart: {
+        type: 'scatter',
+        zoomType: 'xy'
+    },
+    title: {
+        text: 'Taxis hour by hour'
+    },
 
+    yAxis: {
+        title: {
+            text: 'Trips'
+        }
+    },
+    xAxis: {
+        title: {
+            enabled: true,
+            text: 'Hours of the Day'
+        },
+        type: 'time',
+
+        dateTimeLabelFormats : {
+            hour: '%I %p',
+            minute: '%I:%M %p'
+        }
+    },
+    legend: {
+        layout: 'vertical',
+        align: 'right',
+        verticalAlign: 'middle'
+    },
+
+    plotOptions: {
+        series: {
+            label: {
+                connectorAllowed: false
+            },
+        }
+    },
+
+    series: [{
+        name: 'Trips ',
+        data: [{% for row in response %}['{{ row.0| date:"H:i:s"}}',{{ row.1 }}],{% endfor %}]
+    }],
+
+    responsive: {
+        rules: [{
+            condition: {
+                maxWidth: 500
+            },
+            chartOptions: {
+                legend: {
+                    layout: 'horizontal',
+                    align: 'center',
+                    verticalAlign: 'bottom'
+                }
+            }
+        }]
+    }
+
+});
+    </script>
+{% endif %}
 {% endblock %}
