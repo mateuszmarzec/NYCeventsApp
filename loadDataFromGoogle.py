@@ -1,11 +1,14 @@
 from google.cloud import bigquery
-from oauth2client.client import GoogleCredentials
-from oauth2client.service_account import ServiceAccountCredentials
 
-def query_shakespeare(request, start_date, end_date, coordinates):
+
+def query_shakespeare(request, start_date, end_date, coordinates, source):
     client = bigquery.Client.from_service_account_json('My Project-212bfbc62b78.json')
-    print(start_date)
     query_params = [
+        bigquery.ScalarQueryParameter(
+            'source',
+            'STRING',
+            source
+        ),
         bigquery.ScalarQueryParameter(
             'start_date',
             'STRING',

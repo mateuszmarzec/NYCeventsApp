@@ -13,6 +13,8 @@ for event in Events.objects.all():
 CHOICES_OUTPUT = (
     ('GOOGLE_MAP', 'GOOGLE MAP'),
     ('HOUR_BY_HOUR_PLOT', 'HOUR BY HOUR PLOT'),
+    ('BY_STREET1', 'BY STREET PLOT (CIRCLE)'),
+    ('BY_STREET2', 'BY STREET PLOT (COLUMN)'),
 )
 
 

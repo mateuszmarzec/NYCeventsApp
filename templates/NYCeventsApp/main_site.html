@@ -10,8 +10,13 @@
         {% if type == 'HOUR_BY_HOUR_PLOT' %}
             <div id="container"></div>
         {% endif %}
+        {% if type == 'BY_STREET1' %}
+            <div id="container"></div>
+        {% endif %}
+        {% if type == 'BY_STREET2' %}
+            <div id="container"></div>
+        {% endif %}
     {% endif %}
-
     <div id="reg-form" class="container">
         <div id="form-title" class="jumbotron jumbotron">
                               <div class="container">
@@ -175,17 +180,11 @@ function getPoints() {
             enabled: true,
             text: 'Hours of the Day'
         },
-        type: 'time',
+        type: 'category',
 
-        dateTimeLabelFormats : {
-            hour: '%I %p',
-            minute: '%I:%M %p'
-        }
     },
     legend: {
-        layout: 'vertical',
-        align: 'right',
-        verticalAlign: 'middle'
+        enabled: false,
     },
 
     plotOptions: {
@@ -193,6 +192,7 @@ function getPoints() {
             label: {
                 connectorAllowed: false
             },
+            enableMouseTracking: false
         }
     },
 
@@ -200,23 +200,104 @@ function getPoints() {
         name: 'Trips ',
         data: [{% for row in response %}['{{ row.0| date:"H:i:s"}}',{{ row.1 }}],{% endfor %}]
     }],
-
-    responsive: {
-        rules: [{
-            condition: {
-                maxWidth: 500
-            },
-            chartOptions: {
-                legend: {
-                    layout: 'horizontal',
-                    align: 'center',
-                    verticalAlign: 'bottom'
-                }
-            }
-        }]
-    }
-
 });
     </script>
+    {% endif %}
+
+    {% if type == 'BY_STREET1' %}
+
+    <script>
+         Highcharts.chart('container', {
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false,
+                type: 'pie'
+            },
+            title: {
+                text: 'By Street'
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: true,
+                        format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                        style: {
+                            color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                        }
+                    }
+                }
+            },
+            series: [{
+                name: 'Brands',
+                colorByPoint: true,
+                data: [
+                    {% for key, value in counts.items %}
+                    {
+                    name: '{{ key }}',
+                    y: {{ value }}
+                    },
+                    {% endfor %}
+                ]
+            }]
+        });
+    </script>
 {% endif %}
+
+    {% if type == 'BY_STREET2' %}
+<script>
+            Highcharts.chart('container', {
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'By street'
+        },
+        xAxis: {
+            type: 'category'
+        },
+        yAxis: {
+            title: {
+                text: 'Total trips'
+            }
+
+        },
+        legend: {
+            enabled: false
+        },
+        plotOptions: {
+            series: {
+                borderWidth: 0,
+                dataLabels: {
+                    enabled: true,
+                    format: '{point.y:.0f}'
+                }
+            }
+        },
+
+        tooltip: {
+            headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+            pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}</b>'
+        },
+
+        series: [{
+            name: 'Brands',
+            colorByPoint: true,
+            data: [
+            {% for key, value in counts.items %}
+                {
+                name: '{{ key }}',
+                y: {{ value }},
+                },
+            {% endfor %}
+            ]
+        }],
+    });
+</script>
+    {% endif %}
 {% endblock %}
