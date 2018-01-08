@@ -1,14 +1,9 @@
 from google.cloud import bigquery
 
 
-def query_shakespeare(request, start_date, end_date, coordinates, source):
+def query_shakespeare(request, start_date, end_date, coordinates):
     client = bigquery.Client.from_service_account_json('My Project-212bfbc62b78.json')
     query_params = [
-        bigquery.ScalarQueryParameter(
-            'source',
-            'STRING',
-            source
-        ),
         bigquery.ScalarQueryParameter(
             'start_date',
             'STRING',
